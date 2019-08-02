@@ -12,21 +12,21 @@ var app = app || {};
 
 app.animate = () => {
 
-  app.stats.update();
-
   app.animateParticleSystem();
 
   // Animate the sphere position
-  app.controls.step += app.controls.bouncingSpeed;
 
-  app.cone.position.x = Math.sin(app.controls.step) * 60;
-  app.cone.position.z = Math.cos(app.controls.step) * 60;
+  app.sphere.rotation.y += 0.01; //rotationSpeed
 
-  app.sphere.rotation.y += app.controls.rotationSpeed;
+  app.cube.rotation.x += 0.01; //rotationSpeed
+  app.cube.rotation.y += 0.01; //rotationSpeed
+  app.cube.rotation.z += 0.01; //rotationSpeed
 
-  app.cube.rotation.x += app.controls.rotationSpeed;
-  app.cube.rotation.y += app.controls.rotationSpeed;
-  app.cube.rotation.z += app.controls.rotationSpeed;
+  app.cubes.forEach(cube => {
+    cube.rotation.x += cube.rotateStep;
+    cube.rotation.y += cube.rotateStep;
+    cube.rotation.z += cube.rotateStep;
+  });
 
   app.renderer.render(app.scene, app.camera);
 
@@ -67,15 +67,13 @@ app.animateParticleSystem = () => {
     // current position, incremented by its velocity
     // (and also scale it so we can globally speed them
     // up or slow them down)
-    p.x += p.vx * app.controls.particleVelocityScale;
-    p.y += p.vy * app.controls.particleVelocityScale;
-    p.z += p.vz * app.controls.particleVelocityScale;
+    p.x += p.vx * 1.2; //particleVelocityScale
+    p.y += p.vy * 1.2;
+    p.z += p.vz * 1.2;
 
   } // for
 
   app.particleSystem.geometry.verticesNeedUpdate = true;
-
-
 };
 
 
@@ -87,28 +85,7 @@ app.createSpotlight = () => {
   return spotlight;
 };
 
-app.createCone = (x, y, z) => {
-
-  const coneGeometry = new THREE.ConeGeometry(
-    5,
-    20,
-    32,
-  );
-  const coneMaterial = new THREE.MeshLambertMaterial({
-    color: 0xFF8F00,
-    wireframe: true,
-  });
-
-  const cone = new THREE.Mesh(coneGeometry, coneMaterial);
-  cone.position.set(x, y, z);
-
-  cone.rotation.x = Math.PI / 2;
-
-  return cone;
-};
-
-
-app.createCube = (x = -50, y = 100, z = 0) => {
+app.createCube = (x, y, z) => {
 
   const cubeGeometry = new THREE.BoxGeometry(
     5,
@@ -128,7 +105,7 @@ app.createCube = (x = -50, y = 100, z = 0) => {
   cube.rotateStep = Math.random() * 0.05;
 
   cube.material.color.setRGB(
-    300,
+    Math.random(),
     Math.random(),
     Math.random()
   );
@@ -160,9 +137,9 @@ app.createSphere = () => {
 app.createParticleSystem = () => {
 
   const particles = new THREE.Geometry();
-  const dist = app.controls.particleDistributionRange;
+  const dist = 200;
 
-  for (let i = 0; i < app.controls.numParticles; i++) {
+  for (let i = 0; i < 3000; i++) {
     // Create a particle and give it a random position
     const particle = new THREE.Vector3(
       THREE.Math.randInt(-dist, dist), // x

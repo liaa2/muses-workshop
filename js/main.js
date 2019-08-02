@@ -3,26 +3,10 @@
 // otherwise initialise it to an empty object
 var app = app || {};
 
-app.controls = {
-  step: 0,  // for controlling the sphere position
-  bouncingSpeed: 0.05,  // how much to move by, each draw
-  rotationSpeed: 0.01,
-
-  numParticles: 4000, //1000000,
-  particleDistributionRange: 200,
-  particleVelocityScale: 1.0
-};
-
 // This is the entry point to our application
 app.init = () => {
 
   console.log('Hello!');
-
-  // Control panel
-  app.gui = new dat.GUI();
-  app.gui.add(app.controls, 'bouncingSpeed', -2, 2);
-  app.gui.add(app.controls, 'rotationSpeed', 0, 1);
-  app.gui.add(app.controls, 'particleVelocityScale', -1, 1);
 
   // The scene stores and keeps track of all the objects we are creating, including
   // the lights and the camera
@@ -62,12 +46,21 @@ app.init = () => {
   app.axes = new THREE.AxesHelper( 100 );
   app.scene.add( app.axes );
 
-  app.cube = app.createCube();
+  app.cube = app.createCube(-50, 100, 80);
   app.scene.add(app.cube);
 
-  app.cone = app.createCone(0, 0, 0);
-  app.scene.add(app.cone);
-
+  app.cubes = [];
+  for (let i = 0; i < 30; i++) {
+    const range = 60;
+    const cube = app.createCube(
+      THREE.Math.randInt(-range, range), // x
+      // 20,
+      THREE.Math.randInt(-range, range), // y
+      THREE.Math.randInt(-range, range), // z
+    );
+    app.scene.add(cube);
+    app.cubes.push(cube);
+  }
 
   app.sphere = app.createSphere();
   app.scene.add(app.sphere);
@@ -92,8 +85,6 @@ app.init = () => {
     app.renderer.domElement
   );
 
-  app.stats = app.addStats();
-
   app.animate();  // start the animation loop
 
 }; // init()
@@ -111,18 +102,3 @@ app.resize = () => {
 
 // window.onresize = app.init;  // overwrites any previous onresize handler
 window.addEventListener('resize', app.resize);
-
-
-app.addStats = () => {
-
-  const stats = new Stats();
-
-  stats.setMode(0);
-  stats.domElement.style.position = 'absolute';
-  stats.domElement.style.left = '0px';
-  stats.domElement.style.top = '0px';
-
-  document.getElementById('stats').appendChild(stats.domElement);
-
-  return stats;
-};
