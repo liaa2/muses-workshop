@@ -8,7 +8,7 @@ Using three.js to make a simple universe and rotating cubes.
 2. Install Curl. Link: https://curl.haxx.se/download.html
 
 
----
+
 
 ## Getting Started
 1. In your repository, create a `index.html` file.
