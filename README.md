@@ -10,7 +10,7 @@ Using three.js to make a simple universe and rotating cubes.
 
 ---
 
-## Coding
+## Getting Started
 1. In your repository, create a `index.html` file.
 2. In the same repository, create `js`, `img` and `css` folders.
 3. Inside your `css` folder, create a `styles.css` file.
@@ -28,7 +28,7 @@ Using three.js to make a simple universe and rotating cubes.
 7. The structure of your repository should look like this:
 
 ```
-.
+threejs-workshop
 ├── css
 │   └── styles.css
 ├── img
